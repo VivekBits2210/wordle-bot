@@ -1,14 +1,48 @@
 # utils.py
 import argparse
 import random
+import pandas as pd
 from re import M
 from constants import *
-from wordfreq import word_frequency
+from wordfreq import zipf_frequency
 
-def get_word_frequency(word):
-    return word_frequency(word, 'en')
+def get_word_difficulty(word):
+    global frequency_list
+    frequency = zipf_frequency(word, 'en')
+    if frequency == 0:
+        return None
+    elif frequency > 2.63:
+        return 1
+    elif frequency > 1.7:
+        return 2
+    else:
+        return 3
+
+def get_difficulty_to_words_map(difficulty=None):
+    difficulty_to_words_map = {}
+    
+    for word in WORDS:
+        difficulty = get_word_difficulty(word)
+        if difficulty is None:
+            continue
+        elif difficulty not in difficulty_to_words_map:
+            difficulty_to_words_map[difficulty] = set(word)
+        else:
+            difficulty_to_words_map[difficulty].add(word)
+    
+    return difficulty_to_words_map if difficulty is None else difficulty_to_words_map[difficulty]
+
+def get_word(length, difficulty):
+    specific_words = get_difficulty_to_words_map(difficulty=difficulty)
+    if length == 1:
+        word = random.choice(list(specific_words))
+        return word
+    else:
+        specific_words = list(filter(lambda x: len(x) == length, specific_words))
+        return random.choice(specific_words)
 
 def validate_args(args):
+    print("Validating arguments...")
     if not args.word:
         args.word = get_word(args.length, args.difficulty)
     args.word = args.word.lower()
@@ -22,13 +56,6 @@ def validate_args(args):
         raise Exception('Number of guesses must be between 1 and {}'.format(MAX_GUESSES))
     if args.difficulty not in DIFFICULTY_CHOICES:
         raise Exception('Difficulty must be one of {}'.format(DIFFICULTY_CHOICES))
-
-def get_word(length, difficulty):
-    if length == 1:
-        word = random.choice(list(WORDS))
-    else:
-        word = random.choice(list(filter(lambda x: len(x) == length, WORDS)))
-
 
 def fetch_arguments_parser():
     parser = argparse.ArgumentParser(description="Wordle Bot Arena")
