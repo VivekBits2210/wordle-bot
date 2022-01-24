@@ -17,7 +17,7 @@ def main():
     try:
         args = parser.parse()
         wordle = Wordle(args.word, args.guesses)
-        solver = Solver(args.slow, wordle)
+        solver = Solver(args.slow, args.strategy, wordle)
         solver.solve()
     except Exception as e:
         logger.error(e)

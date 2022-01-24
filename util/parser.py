@@ -52,6 +52,13 @@ def fetch_arguments_parser():
         default=False,
         required=False,
     )
+    parser.add_argument(
+        "-S",
+        "--strategy",
+        help="Choose strategy",
+        choices=STRATEGY_CHOICES,
+        default=StrategyEnum.RAND_CAND.name
+    )
     return parser
 
 

@@ -1,3 +1,19 @@
+from enum import Enum
+
+class StrategyEnum(Enum):
+    RAND = 1
+    RAND_CAND = 2
+    DEEDY = 3
+
+    def from_str(label):
+        if label == 'RAND':
+            return StrategyEnum.RAND
+        if label == 'RAND_CAND':
+            return StrategyEnum.RAND_CAND
+        if label == 'DEEDY':
+            return StrategyEnum.DEEDY
+        raise NotImplementedError
+
 def load_text_file(filename):
     with open(filename, "r") as f:
         return set(f.read().split())
@@ -21,3 +37,4 @@ CLUE_BIT_TO_EMOJI_MAP = {
     1: "🟨",
     2: "🟩",
 }
+STRATEGY_CHOICES = [e.name for e in StrategyEnum]
