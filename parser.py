@@ -13,13 +13,14 @@ def fetch_arguments_parser():
                         required=False)
     parser.add_argument('-n',
                         '--length',
-                        type=int,
                         help='Length of word',
+                        type=int,
                         default=DEFAULT_WORD_LENGTH,
                         required=False)
     parser.add_argument('-g',
                         '--guesses',
                         help='Number of guesses allowed',
+                        type=int,
                         default=DEFAULT_NUM_GUESSES,
                         required=False)
     parser.add_argument('-s',
@@ -35,6 +36,12 @@ def fetch_arguments_parser():
                         choices=DIFFICULTY_CHOICES,
                         default=DEFAULT_DIFFICULTY,
                         required=False)
+    parser.add_argument('-D',
+                        '--debug',
+                        help="Debug mode",
+                        action='store_true',
+                        default=False,
+                        required=False)
     return parser
 
 class Parser:
@@ -44,7 +51,7 @@ class Parser:
 
     def parse(self):
         self.args = self.parser.parse_args()
-        self.validate_args()
+        self._validate_args()
         return self.args
         
     def _validate_args(self):
@@ -58,7 +65,7 @@ class Parser:
         
         self.args.word = self.args.word.lower()
         if self.args.word not in WORDS:
-            raise Exception('Word must be in the dictionary or be specified')
+            raise Exception(f'Word \"{self.args.word}\" is not in the dictionary')
         
         if self.args.length < 1 or self.args.length > MAX_WORD_LENGTH:
             raise Exception("Word length must be between 1 and {}".format(MAX_WORD_LENGTH))
