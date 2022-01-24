@@ -1,5 +1,4 @@
 import random
-import pandas as pd
 from wordfreq import zipf_frequency, word_frequency
 from util.constants import *
 from util.log_gen import get_logger
@@ -109,6 +108,7 @@ class WordUtil:
         return difficulty_to_words_map
 
     def create_difficulty_to_frequency_interval_data(self):
+        import pandas as pd
         # data to be pushed
         data = {}
 
