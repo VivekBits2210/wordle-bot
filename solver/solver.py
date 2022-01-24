@@ -11,9 +11,10 @@ from solver.random_strategy import RandomStrategy
 logger = get_logger(__file__)
 
 class Solver:
-    def __init__(self, length, guesses, wordle):
+    def __init__(self, length, guesses, slow, wordle):
         self.length = length
         self.guesses = guesses
+        self.slow = slow
         self.wordle = wordle
         self.clue_history = []
 
@@ -25,4 +26,7 @@ class Solver:
                 break
             self.clue_history.append(clues)
             self.wordle.pretty_print_guess()
-        
+            if self.slow:
+                print("On slow mode, waiting for input: ",end='')
+                input()
+            

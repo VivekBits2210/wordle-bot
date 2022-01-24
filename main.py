@@ -10,7 +10,7 @@ def main():
         parser = Parser()
         args = parser.parse()
         wordle = Wordle(args.word,args.guesses)
-        solver = Solver(args.length,args.guesses,wordle)
+        solver = Solver(args.length,args.guesses,args.slow,wordle)
         solver.solve()
     except Exception as e:
         logger.error(e)

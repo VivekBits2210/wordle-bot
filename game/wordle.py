@@ -9,7 +9,7 @@ class Wordle:
         self.num_guesses = num_guesses
         self.guess_history = []
         self.clue_bits_history = []
-        logger.info(f"Started Wordle game for word {self.word} with {self.num_guesses} guesses remaining...\n")
+        print(f"Started Wordle game for word {self.word} with {self.num_guesses} guesses remaining...\n")
 
     # 0 -> nothing, 1 -> out of place, 2 -> accurate
     def get_clue_bits(self,word_guess):
@@ -55,12 +55,12 @@ class Wordle:
 
     def print_result(self):
         if self.has_won():
-            logger.info(f"Player has won using {self.total_guesses - self.num_guesses} out of {self.total_guesses} guesses!")
+            print(f"Player has won using {self.total_guesses - self.num_guesses} out of {self.total_guesses} guesses!", end='\n\n')
         else:
-            logger.info(f"Player lost, the word is '{self.word}'!")
+            print(f"Player lost, the word is '{self.word}'!", end='\n\n')
 
     def pretty_print_guess(self):
-        print(f"Guess ({self.total_guesses - self.num_guesses}/{self.total_guesses}):- \n")
+        print(f"Guess ({self.total_guesses - self.num_guesses}/{self.total_guesses}):-",end="\n\n")
         print(f"  {'  '.join(self.guess_history[-1].upper())}")
-        print(f" {' '.join(self.convert_clues_to_emoji(self.clue_bits_history[-1]))}\n")            
+        print(f" {' '.join(self.convert_clues_to_emoji(self.clue_bits_history[-1]))}",end="\n\n")            
     
