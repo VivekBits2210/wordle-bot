@@ -16,10 +16,9 @@ class Wordle:
         )
 
     # 0 -> nothing, 1 -> out of place, 2 -> accurate
-    def get_clue_bits(self, word_guess):
+    def play(self, word_guess):
         if self.num_guesses <= 0:
-            self.print_result()
-            return None
+            raise Exception("Guesses are over, cannot play!")
 
         self.num_guesses -= 1
         self.guess_history.append(word_guess)
@@ -34,9 +33,8 @@ class Wordle:
                 clue_bits[i] = 0
         self.clue_bits_history.append(clue_bits)
 
-        if self.has_won():
-            self.print_result()
-            self.num_guesses = 0  # Prevent further play
+        if self.is_game_complete():
+            return None
 
         return clue_bits
 
@@ -56,6 +54,9 @@ class Wordle:
 
     def has_lost(self):
         return not self.has_won() and self.num_guesses <= 0
+    
+    def is_game_complete(self):
+        return self.has_won() or self.has_lost()
 
     def print_result(self):
         if self.has_won():
@@ -66,7 +67,7 @@ class Wordle:
         else:
             print(f"Player lost, the word is '{self.word}'!", end="\n\n")
 
-    def pretty_print_guess(self):
+    def pretty_print_game_output(self):
         print(
             f"Guess ({self.total_guesses - self.num_guesses}/{self.total_guesses}):-",
             end="\n\n",
@@ -76,3 +77,6 @@ class Wordle:
             f" {' '.join(self.convert_clues_to_emoji(self.clue_bits_history[-1]))}",
             end="\n\n",
         )
+
+        if self.is_game_complete():
+            self.print_result()
