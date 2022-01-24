@@ -1,4 +1,3 @@
-# solver.py
 class Solver:
     def __init__(self, word, length, guesses, slow, difficulty):
         self.word = word

@@ -44,9 +44,10 @@ class Parser:
 
     def parse(self):
         self.args = self.parser.parse_args()
+        self.validate_args()
         return self.args
         
-    def validate_args(self):
+    def _validate_args(self):
         if self.args is None:
             self.args = self.parser.parse_args()
         
