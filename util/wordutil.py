@@ -1,9 +1,9 @@
-import os
-import pickle
 import random
+import pandas as pd
 from wordfreq import zipf_frequency, word_frequency
-from util.constants import WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH, WORDS
+from util.constants import *
 from util.log_gen import get_logger
+from util.pickleutil import pull_pickle_file, push_pickle_file
 logger = get_logger(__file__)
         
 class WordUtil:
@@ -11,6 +11,7 @@ class WordUtil:
         self.length = length
         self.difficulty = difficulty
         self.word = None
+        self.difficulty_to_frequency_interval_map = None
     
     def get_word(self):
         specific_words = self.get_words_of_given_difficulty()
@@ -22,32 +23,19 @@ class WordUtil:
         self.word = random.choice(list(specific_words))
         return self.word
 
-    def get_words_of_given_difficulty(self,difficulty=None):
+    def get_words_of_given_difficulty(self,difficulty=None,*,force_create=False):
         if difficulty is None:
             difficulty = self.difficulty
-
         difficulty_to_words_map = {}
 
-        try:
-            if os.path.exists(WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH):
-                with open(WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH, 'rb') as f:
-                    difficulty_to_words_map = pickle.load(f)
+        if not force_create:
+            difficulty_to_words_map = pull_pickle_file(DIFFICULTY_TO_WORD_MAP_PICKLE_FILE_PATH)
+            if difficulty_to_words_map is not None:
                 return difficulty_to_words_map[difficulty]
-        except KeyError:
-            logger.error(f"Pickle file {WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH} has invalid structure")            
-        except pickle.PicklingError:
-            logger.error(f"Failed to load pickle file {WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH}, probably corrupted.")
 
-        for word in WORDS:
-            self.word = word
-            difficulty = self.get_word_difficulty()
-            if difficulty not in difficulty_to_words_map:
-                difficulty_to_words_map[difficulty] = set(word)
-            else:
-                difficulty_to_words_map[difficulty].add(word)
-                
-        with open(WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH, 'wb') as f:
-            pickle.dump(difficulty_to_words_map, f)
+        # Create difficulty to words map if not exist (or if force_create)
+        difficulty_to_words_map = self.create_word_to_difficulty_map()
+        push_pickle_file(DIFFICULTY_TO_WORD_MAP_PICKLE_FILE_PATH, difficulty_to_words_map)
 
         return difficulty_to_words_map[difficulty]
 
@@ -65,18 +53,26 @@ class WordUtil:
     def get_word_difficulty(self,word=None):
         if word is None:
             word = self.word
-
         frequency = self.get_word_frequency(word, kind='zipf')
-        if frequency == 0:
-            return None
-        elif frequency > 2.63:
-            return 1
-        elif frequency > 1.7:
-            return 2
-        elif frequency > 0:
-            return 3
+        num_difficulty_levels = len(DIFFICULTY_CHOICES)
+
+        if self.difficulty_to_frequency_interval_map:
+            return self.get_difficulty_from_frequency_interval_map(frequency)
         else:
-            raise Exception(f"Word {word} has very low frequency: {frequency}")
+            # Difficulty to frequency contains data in the form ({<Num Difficulty>:{<Difficulty Level>:<Frequency Interval>,..},..})
+            difficulty_to_frequency_interval_data = pull_pickle_file(DIFFICULTY_TO_FREQUENCY_PICKLE_FILE_PATH)
+            if difficulty_to_frequency_interval_data is not None:
+                self.difficulty_to_frequency_interval_map = difficulty_to_frequency_interval_data[num_difficulty_levels]
+                return self.get_difficulty_from_frequency_interval_map(frequency)
+
+            # Create difficulty to frequency map if not exist
+            difficulty_to_frequency_interval_data = self.create_difficulty_to_frequency_interval_data()
+            self.difficulty_to_frequency_interval_map = difficulty_to_frequency_interval_data[num_difficulty_levels]
+            push_pickle_file(DIFFICULTY_TO_FREQUENCY_PICKLE_FILE_PATH, difficulty_to_frequency_interval_data)
+            self.get_words_of_given_difficulty(1,force_create=True)
+
+            return self.get_difficulty_from_frequency_interval_map(frequency)
+
 
     def get_word_frequency(self, word=None, *, kind):
         if word is None:
@@ -89,6 +85,41 @@ class WordUtil:
         else:
             raise Exception(f"Invalid kind: {kind}")
 
-    
+    def get_difficulty_from_frequency_interval_map(self, frequency):
+        for difficulty in self.difficulty_to_frequency_interval_map:
+            if frequency in self.difficulty_to_frequency_interval_map[difficulty]:
+                return difficulty
+        return None
 
     
+    def create_word_to_difficulty_map(self,*,words=WORDS):
+        difficulty_to_words_map = {}
+        for word in words:
+            self.word = word
+            difficulty = self.get_word_difficulty()
+
+            #Ignore words with very high difficulty
+            if difficulty is None: 
+                continue
+
+            if difficulty not in difficulty_to_words_map:
+                difficulty_to_words_map[difficulty] = set(word)
+            else:
+                difficulty_to_words_map[difficulty].add(word)
+        return difficulty_to_words_map
+
+    def create_difficulty_to_frequency_interval_data(self):
+        # data to be pushed
+        data = {}
+
+        frequency_series = pd.Series([self.get_word_frequency(word,kind='zipf') for word in WORDS])
+        dataframe = pd.DataFrame(frequency_series,columns=['frequency'])
+        dataframe = dataframe[dataframe.frequency>0]
+        for num_choices in range(2,MAX_DIFFICULTY_CHOICES_INTERNAL+1):
+            intervals = pd.qcut(dataframe.frequency,num_choices).cat.categories
+            difficulty_codes = reversed(range(1,num_choices+1)) #Reversed as least frequent is most difficult
+            difficulty_to_frequency_interval_map = dict(zip(difficulty_codes,intervals))
+            data[num_choices] = difficulty_to_frequency_interval_map
+        return data
+            
+                
