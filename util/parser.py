@@ -76,8 +76,6 @@ class Parser:
         if self.args is None:
             self.args = self.parser.parse_args()
 
-        logger.info("Validating arguments...")
-
         if self.args.word is None:
             self.args.word = WordUtil(
                 length=self.args.length, difficulty=self.args.difficulty
