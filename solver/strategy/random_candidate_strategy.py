@@ -3,7 +3,6 @@ import random
 from util.wordutil import WordUtil
 
 
-
 class RandomCandidateStrategy:
     def __init__(self, wordle):
         self.wordle = wordle
@@ -18,9 +17,9 @@ class RandomCandidateStrategy:
             last_word = self.wordle.guess_history[-1]
             last_clue = self.wordle.clue_bits_history[-1]
             self.candidates.remove(self.wordle.guess_history[-1])
-        except IndexError: #Game has begun, nothing to parse
-            return 
-        
+        except IndexError:  # Game has begun, nothing to parse
+            return
+
         for position in last_clue:
             if last_clue[position] >= 1:
                 self.confirmed_alphabets.add(last_word[position])
@@ -28,7 +27,7 @@ class RandomCandidateStrategy:
                 self.confirmed_alphabet_mapping[position] = last_word[position]
 
     def update_candidates(self):
-        self.parse_last_guess_and_clue()        
+        self.parse_last_guess_and_clue()
         new_candidates = deepcopy(self.candidates)
         for candidate in self.candidates:
             continue_in_outer_loop = False
@@ -37,7 +36,7 @@ class RandomCandidateStrategy:
                     new_candidates.remove(candidate)
                     continue_in_outer_loop = True
                     break
-            
+
             if continue_in_outer_loop:
                 continue
 
@@ -46,7 +45,6 @@ class RandomCandidateStrategy:
                     new_candidates.remove(candidate)
                     break
         self.candidates = new_candidates
-
 
     def get_guess(self):
         self.update_candidates()

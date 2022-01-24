@@ -57,7 +57,7 @@ def fetch_arguments_parser():
         "--strategy",
         help="Choose strategy",
         choices=STRATEGY_CHOICES,
-        default=StrategyEnum.RAND_CAND.name
+        default=StrategyEnum.RAND_CAND.name,
     )
     return parser
 

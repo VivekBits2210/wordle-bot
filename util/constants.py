@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class StrategyEnum(Enum):
     RAND = 1
     RAND_CAND = 2
@@ -7,15 +8,16 @@ class StrategyEnum(Enum):
     USER = 4
 
     def from_str(label):
-        if label == 'RAND':
+        if label == "RAND":
             return StrategyEnum.RAND
-        if label == 'RAND_CAND':
+        if label == "RAND_CAND":
             return StrategyEnum.RAND_CAND
-        if label == 'DEEDY':
+        if label == "DEEDY":
             return StrategyEnum.DEEDY
-        if label == 'USER':
+        if label == "USER":
             return StrategyEnum.USER
         raise NotImplementedError
+
 
 def load_text_file(filename):
     with open(filename, "r") as f:

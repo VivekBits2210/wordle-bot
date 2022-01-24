@@ -16,9 +16,7 @@ class Wordle:
                 f"Started Wordle game for word {self.word} with {self.num_guesses} guesses remaining...\n"
             )
         else:
-            print(
-                f"Started Wordle game with {self.num_guesses} guesses remaining...\n"
-            )
+            print(f"Started Wordle game with {self.num_guesses} guesses remaining...\n")
 
     # 0 -> nothing, 1 -> out of place, 2 -> accurate
     def play(self, word_guess):
@@ -59,7 +57,7 @@ class Wordle:
 
     def has_lost(self):
         return not self.has_won() and self.num_guesses <= 0
-    
+
     def is_game_complete(self):
         return self.has_won() or self.has_lost()
 

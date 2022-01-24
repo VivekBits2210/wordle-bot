@@ -16,8 +16,8 @@ def main():
 
     try:
         args = parser.parse()
-        if args.strategy == 'USER':
-            temp_dict = {key:vars(args)[key] for key in vars(args) if key!='word'}
+        if args.strategy == "USER":
+            temp_dict = {key: vars(args)[key] for key in vars(args) if key != "word"}
             print(f"Conditions: {temp_dict}")
             wordle = Wordle(args.word, args.guesses, show_word=False)
         else:

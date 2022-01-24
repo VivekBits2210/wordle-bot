@@ -1,7 +1,4 @@
-from pyrsistent import b
 from util.constants import WORDS
-from util.wordutil import WordUtil
-import random
 
 
 class UserStrategy:
