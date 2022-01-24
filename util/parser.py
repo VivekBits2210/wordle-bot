@@ -61,7 +61,10 @@ class Parser:
         logger.info("Validating arguments...")
 
         if self.args.word is None:
-            self.args.word = WordUtil(self.args.length, self.args.difficulty).get_word()
+            self.args.word = WordUtil(length=self.args.length, difficulty=self.args.difficulty).get_word()
+        else:
+            self.args.length = len(self.args.word)
+            self.args.difficulty = WordUtil().get_word_difficulty(self.args.word)
         
         self.args.word = self.args.word.lower()
         if self.args.word not in WORDS:
@@ -69,9 +72,6 @@ class Parser:
         
         if self.args.length < 1 or self.args.length > MAX_WORD_LENGTH:
             raise Exception("Word length must be between 1 and {}".format(MAX_WORD_LENGTH))
-        
-        if self.args.word and len(self.args.word) != self.args.length:
-            raise Exception('Word length must match the length of the word')
         
         if self.args.guesses < 1 or self.args.guesses > MAX_GUESSES:
             raise Exception('Number of guesses must be between 1 and {}'.format(MAX_GUESSES))
