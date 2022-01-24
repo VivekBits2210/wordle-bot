@@ -4,8 +4,8 @@ def load_text_file(filename):
 
 DEFAULT_WORD_LENGTH = 5
 DEFAULT_NUM_GUESSES = 6
-DIFFICULTY_CHOICES = list(range(1,10))
-MAX_DIFFICULTY_CHOICES_INTERNAL = 10
+DIFFICULTY_CHOICES = list(range(1,10)) #NOTE: To effectively change this, delete both pickle files under data as well
+MAX_DIFFICULTY_CHOICES_INTERNAL = 10 
 DEFAULT_DIFFICULTY = 2
 MAX_GUESSES = 50
 MAX_WORD_LENGTH = 20
