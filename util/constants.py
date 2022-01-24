@@ -1,4 +1,3 @@
-# constants.py
 def load_dictionary(filename):
     with open(filename, 'r') as f:
         return set(f.read().split())

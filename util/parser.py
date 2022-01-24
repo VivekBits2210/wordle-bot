@@ -1,5 +1,5 @@
 import argparse
-from constants import *
+from util.constants import *
 from util.log_gen import get_logger
 from util.wordutil import WordUtil
 logger = get_logger(__file__)

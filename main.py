@@ -5,6 +5,7 @@ from solver.solver import Solver
 
 def main():
     try:
+        logger = get_logger(__file__)
         parser = Parser()
         args = parser.parse()
         solver = Solver(**vars(args))
@@ -15,5 +16,4 @@ def main():
             traceback.print_exc()
 
 if __name__ == '__main__':
-    logger = get_logger(__file__)
     main()
