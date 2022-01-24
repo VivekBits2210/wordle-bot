@@ -27,7 +27,6 @@ class RandomCandidateStrategy:
                 self.confirmed_alphabet_mapping[position] = last_word[position]
 
     def update_candidates(self):
-        self.parse_last_guess_and_clue()
         new_candidates = deepcopy(self.candidates)
         for candidate in self.candidates:
             continue_in_outer_loop = False
@@ -47,5 +46,6 @@ class RandomCandidateStrategy:
         self.candidates = new_candidates
 
     def get_guess(self):
+        self.parse_last_guess_and_clue()
         self.update_candidates()
         return random.choice(list(self.candidates))
