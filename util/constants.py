@@ -13,3 +13,8 @@ WORDS_FILE_PATH = './data/words.txt'
 WORDS = load_text_file(WORDS_FILE_PATH)
 DIFFICULTY_TO_WORD_MAP_PICKLE_FILE_PATH = './data/difficulty_to_word.pkl'
 DIFFICULTY_TO_FREQUENCY_PICKLE_FILE_PATH = './data/difficulty_to_frequency.pkl'
+CLUE_BIT_TO_EMOJI_MAP ={
+    0 :'⬛',
+    1 :'🟨',
+    2 :'🟩',
+}

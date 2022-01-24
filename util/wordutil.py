@@ -89,7 +89,7 @@ class WordUtil:
         for difficulty in self.difficulty_to_frequency_interval_map:
             if frequency in self.difficulty_to_frequency_interval_map[difficulty]:
                 return difficulty
-        return None
+        raise Exception(f"Word is too rare.")
 
     
     def create_word_to_difficulty_map(self,*,words=WORDS):
