@@ -2,7 +2,7 @@ import os
 import pickle
 import random
 from wordfreq import zipf_frequency, word_frequency
-from constants import WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH, WORDS
+from util.constants import WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH, WORDS
 from util.log_gen import get_logger
 logger = get_logger(__file__)
         
