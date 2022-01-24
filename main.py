@@ -8,7 +8,7 @@ def main():
         logger = get_logger(__file__)
         parser = Parser()
         args = parser.parse()
-        solver = Solver(**vars(args))
+        solver = Solver(args.word,args.guesses)
         solver.solve()
     except Exception as e:
         logger.error(e)
