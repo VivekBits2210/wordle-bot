@@ -1,14 +1,16 @@
 from util.log_gen import get_logger
 from util.constants import StrategyEnum
-from solver.random_strategy import RandomStrategy
-from solver.random_candidate_strategy import RandomCandidateStrategy
-from solver.deedy_strategy import DeedyStrategy
+from solver.strategy.random_strategy import RandomStrategy
+from solver.strategy.random_candidate_strategy import RandomCandidateStrategy
+from solver.strategy.deedy_strategy import DeedyStrategy
+from solver.strategy.user_strategy import UserStrategy
 
 logger = get_logger(__file__)
 strategy_enum_to_strategy_mapper = {
         StrategyEnum.RAND: RandomStrategy,
         StrategyEnum.RAND_CAND: RandomCandidateStrategy,
-        StrategyEnum.DEEDY: DeedyStrategy
+        StrategyEnum.DEEDY: DeedyStrategy,
+        StrategyEnum.USER: UserStrategy
 }
 
 class Solver:

@@ -16,7 +16,14 @@ def main():
 
     try:
         args = parser.parse()
-        wordle = Wordle(args.word, args.guesses)
+        if args.strategy == 'USER':
+            temp_dict = {key:vars(args)[key] for key in vars(args) if key!='word'}
+            print(f"Conditions: {temp_dict}")
+            wordle = Wordle(args.word, args.guesses, show_word=False)
+        else:
+            print(f"Conditions: {vars(args)}")
+            wordle = Wordle(args.word, args.guesses)
+
         solver = Solver(args.slow, args.strategy, wordle)
         solver.solve()
     except Exception as e:

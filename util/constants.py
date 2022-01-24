@@ -4,6 +4,7 @@ class StrategyEnum(Enum):
     RAND = 1
     RAND_CAND = 2
     DEEDY = 3
+    USER = 4
 
     def from_str(label):
         if label == 'RAND':
@@ -12,6 +13,8 @@ class StrategyEnum(Enum):
             return StrategyEnum.RAND_CAND
         if label == 'DEEDY':
             return StrategyEnum.DEEDY
+        if label == 'USER':
+            return StrategyEnum.USER
         raise NotImplementedError
 
 def load_text_file(filename):

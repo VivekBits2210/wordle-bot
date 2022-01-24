@@ -5,15 +5,20 @@ logger = get_logger(__file__)
 
 
 class Wordle:
-    def __init__(self, word, num_guesses):
+    def __init__(self, word, num_guesses, show_word=True):
         self.word = word
         self.total_guesses = num_guesses
         self.num_guesses = num_guesses
         self.guess_history = []
         self.clue_bits_history = []
-        print(
-            f"Started Wordle game for word {self.word} with {self.num_guesses} guesses remaining...\n"
-        )
+        if show_word:
+            print(
+                f"Started Wordle game for word {self.word} with {self.num_guesses} guesses remaining...\n"
+            )
+        else:
+            print(
+                f"Started Wordle game with {self.num_guesses} guesses remaining...\n"
+            )
 
     # 0 -> nothing, 1 -> out of place, 2 -> accurate
     def play(self, word_guess):
