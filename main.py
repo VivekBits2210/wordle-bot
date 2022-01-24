@@ -1,8 +1,7 @@
-import argparse
 import traceback
-from parser import Parser
-from solver import Solver
-from log_gen import get_logger
+from util.parser import Parser
+from util.log_gen import get_logger
+from solver.solver import Solver
 
 def main():
     try:

@@ -1,7 +1,7 @@
 import argparse
 from constants import *
-from log_gen import get_logger
-from wordutil import WordUtil
+from util.log_gen import get_logger
+from util.wordutil import WordUtil
 logger = get_logger(__file__)
 
 def fetch_arguments_parser():

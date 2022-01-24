@@ -2,8 +2,8 @@ import os
 import pickle
 import random
 from wordfreq import zipf_frequency, word_frequency
-from constants import WORD_TO_DIFFICULTY_PICKLE_OBJECT_NAME, WORDS
-from log_gen import get_logger
+from constants import WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH, WORDS
+from util.log_gen import get_logger
 logger = get_logger(__file__)
         
 class WordUtil:
@@ -29,14 +29,14 @@ class WordUtil:
         difficulty_to_words_map = {}
 
         try:
-            if os.path.exists(WORD_TO_DIFFICULTY_PICKLE_OBJECT_NAME):
-                with open(WORD_TO_DIFFICULTY_PICKLE_OBJECT_NAME, 'rb') as f:
+            if os.path.exists(WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH):
+                with open(WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH, 'rb') as f:
                     difficulty_to_words_map = pickle.load(f)
                 return difficulty_to_words_map[self.difficulty]
         except KeyError:
-            logger.error(f"Pickle file {WORD_TO_DIFFICULTY_PICKLE_OBJECT_NAME} has invalid structure")            
+            logger.error(f"Pickle file {WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH} has invalid structure")            
         except pickle.PicklingError:
-            logger.error(f"Failed to load pickle file {WORD_TO_DIFFICULTY_PICKLE_OBJECT_NAME}, probably corrupted.")
+            logger.error(f"Failed to load pickle file {WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH}, probably corrupted.")
 
         for word in WORDS:
             self.word = word
@@ -46,7 +46,7 @@ class WordUtil:
             else:
                 difficulty_to_words_map[difficulty].add(word)
                 
-        with open(WORD_TO_DIFFICULTY_PICKLE_OBJECT_NAME, 'wb') as f:
+        with open(WORD_TO_DIFFICULTY_PICKLE_OBJECT_FILE_PATH, 'wb') as f:
             pickle.dump(difficulty_to_words_map, f)
 
         return difficulty_to_words_map[self.difficulty]

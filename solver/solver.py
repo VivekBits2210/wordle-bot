@@ -1,4 +1,4 @@
-from log_gen import get_logger
+from util.log_gen import get_logger
 logger = get_logger(__file__)
 
 class Solver:
