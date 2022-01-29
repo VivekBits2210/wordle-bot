@@ -1,3 +1,4 @@
+import time
 from util.log_gen import get_logger
 from util.constants import StrategyEnum
 from solver.strategy.random_strategy import RandomStrategy
@@ -20,21 +21,25 @@ strategy_enum_to_strategy_mapper = {
 }
 
 class Solver:
-    def __init__(self, slow, strategy, wordle):
+    def __init__(self, wordle, strategy, *, subdue=False, slow=False):
         self.slow = slow
+        self.subdue = subdue
         self.wordle = wordle
         self.strategy_enum = StrategyEnum.from_str(strategy)
         self.strategy = strategy_enum_to_strategy_mapper[self.strategy_enum](
             self.wordle
         )
 
+    def set_game(self, game):
+        self.wordle = game
+
     def solve(self):
-        print(f"Strategy: {self.strategy_enum.name}\n")
+        if not self.subdue:
+            print(f"Strategy: {self.strategy_enum.name}\n")
         while True:
             guess = self.strategy.get_guess()
             self.wordle.play(guess)
             self.wordle.pretty_print_game_output()
-
             if self.wordle.is_game_complete():
                 break
 

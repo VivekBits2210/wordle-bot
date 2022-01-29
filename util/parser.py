@@ -1,4 +1,5 @@
 import argparse
+from lib2to3.pgen2.token import STAR
 from util.constants import *
 from util.log_gen import get_logger
 from util.wordutil import WordUtil
@@ -59,6 +60,14 @@ def fetch_arguments_parser():
         choices=STRATEGY_CHOICES,
         default=StrategyEnum.RAND_CAND.name,
     )
+    parser.add_argument(
+        "-p",
+        "--profiler",
+        help="Profile a strategy against all words",
+        action="store_true",
+        default=False,
+        required=False,
+    )
     return parser
 
 
@@ -100,5 +109,3 @@ class Parser:
 
         if self.args.difficulty not in DIFFICULTY_CHOICES:
             raise Exception("Difficulty must be one of {}".format(DIFFICULTY_CHOICES))
-
-        logger.info(f"Valid Arguments: {vars(self.args)}")

@@ -26,7 +26,7 @@ class WordUtil:
         self.word = random.choice(list(specific_words))
         return self.word
 
-    def get_words_of_given_difficulty(self, difficulty=None, *, force_create=False):
+    def get_words_of_given_difficulty(self,*, word_subset=WORDS, difficulty=None, force_create=False):
         if difficulty is None:
             difficulty = self.difficulty
         difficulty_to_words_map = {}
@@ -44,7 +44,8 @@ class WordUtil:
             DIFFICULTY_TO_WORD_MAP_PICKLE_FILE_PATH, difficulty_to_words_map
         )
 
-        return difficulty_to_words_map[difficulty]
+        words = difficulty_to_words_map[difficulty]
+        return words.intersection(word_subset)
 
     def get_words_of_given_length(self, length=None, *, words=WORDS):
         if length is None:
@@ -87,7 +88,7 @@ class WordUtil:
                 DIFFICULTY_TO_FREQUENCY_PICKLE_FILE_PATH,
                 difficulty_to_frequency_interval_data,
             )
-            self.get_words_of_given_difficulty(1, force_create=True)
+            self.get_words_of_given_difficulty(difficulty=1, force_create=True)
 
             return self.get_difficulty_from_frequency_interval_map(frequency)
 

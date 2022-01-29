@@ -1,9 +1,17 @@
 import traceback
 from game.wordle import Wordle
+from profiler.profiler import Profiler
 from util.parser import Parser
 from util.log_gen import get_logger
 from solver.solver import Solver
 
+'''
+Work left:
+1. Speed up profiler
+2. Removing direct access to word by strategy
+3. Word is too rare bug on changing dictionary
+4. Other solver strategies
+'''
 
 def main():
     try:
@@ -20,12 +28,15 @@ def main():
             temp_dict = {key: vars(args)[key] for key in vars(args) if key != "word"}
             print(f"Conditions: {temp_dict}")
             wordle = Wordle(args.word, args.guesses, show_word=False)
-        else:
+
+        if args.profiler: #Profile
+            profiler = Profiler(args.strategy)
+            print(profiler.get_profile())
+        else: #Solve
             print(f"Conditions: {vars(args)}")
             wordle = Wordle(args.word, args.guesses)
-
-        solver = Solver(args.slow, args.strategy, wordle)
-        solver.solve()
+            solver = Solver(wordle,args.strategy,slow=args.slow)
+            solver.solve()
     except Exception as e:
         logger.error(f"{repr(e)}")
         traceback.print_exc()

@@ -1,8 +1,10 @@
+import time
 from copy import deepcopy
 import random
+from util.log_gen import get_logger
 from util.wordutil import WordUtil
 
-
+logger = get_logger(__file__)
 class RandomCandidateStrategy:
     def __init__(self, wordle):
         self.wordle = wordle
@@ -12,6 +14,11 @@ class RandomCandidateStrategy:
         self.confirmed_alphabets = set()
         self.confirmed_absent_alphabets = set()
         self.confirmed_alphabet_mapping = {}
+        self.alphabet_to_candidate_mapping = {} #TODO: Find ways to decrease candidate_update_time
+
+        # for candidate in self.candidates:
+        #     for alphabet in candidate:
+
 
     def parse_last_guess_and_clue(self):
         try:
@@ -41,10 +48,10 @@ class RandomCandidateStrategy:
                     break
 
                 if index in self.confirmed_alphabet_mapping:
-                    if candidate[index] != self.confirmed_alphabet_mapping[index]:
+                    if alphabet != self.confirmed_alphabet_mapping[index]:
                         discard = True
                         break
-        
+
             if discard:
                 new_candidates.remove(candidate)
 
@@ -53,4 +60,5 @@ class RandomCandidateStrategy:
     def get_guess(self):
         self.parse_last_guess_and_clue()
         self.update_candidates()
-        return random.choice(list(self.candidates))
+        choice = random.choice(list(self.candidates))
+        return choice

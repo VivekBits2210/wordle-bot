@@ -1,3 +1,4 @@
+import time
 from util.constants import CLUE_BIT_TO_EMOJI_MAP
 from util.log_gen import get_logger
 
@@ -5,18 +6,20 @@ logger = get_logger(__file__)
 
 
 class Wordle:
-    def __init__(self, word, num_guesses, show_word=True):
+    def __init__(self, word, num_guesses, *, show_word=True, subdue=False):
         self.word = word
         self.total_guesses = num_guesses
         self.num_guesses = num_guesses
         self.guess_history = []
         self.clue_bits_history = []
-        if show_word:
-            print(
-                f"Started Wordle game for word {self.word} with {self.num_guesses} guesses remaining...\n"
-            )
-        else:
-            print(f"Started Wordle game with {self.num_guesses} guesses remaining...\n")
+        self.subdue = subdue
+        if not subdue:
+            if show_word:
+                print(
+                    f"Started Wordle game for word {self.word} with {self.num_guesses} guesses remaining...\n"
+                )
+            else:
+                print(f"Started Wordle game with {self.num_guesses} guesses remaining...\n")
 
     # 0 -> nothing, 1 -> out of place, 2 -> accurate
     def play(self, word_guess):
@@ -62,24 +65,26 @@ class Wordle:
         return self.has_won() or self.has_lost()
 
     def print_result(self):
-        if self.has_won():
-            print(
-                f"Player has won using {self.total_guesses - self.num_guesses} out of {self.total_guesses} guesses!",
-                end="\n\n",
-            )
-        else:
-            print(f"Player lost, the word is '{self.word}'!", end="\n\n")
+        if not self.subdue:
+            if self.has_won():
+                print(
+                    f"Player has won using {self.total_guesses - self.num_guesses} out of {self.total_guesses} guesses!",
+                    end="\n\n",
+                )
+            else:
+                print(f"Player lost, the word is '{self.word}'!", end="\n\n")
 
     def pretty_print_game_output(self):
-        print(
-            f"Guess ({self.total_guesses - self.num_guesses}/{self.total_guesses}):-",
-            end="\n\n",
-        )
-        print(f"  {'  '.join(self.guess_history[-1].upper())}")
-        print(
-            f" {' '.join(self.convert_clues_to_emoji(self.clue_bits_history[-1]))}",
-            end="\n\n",
-        )
+        if not self.subdue:
+            print(
+                f"Guess ({self.total_guesses - self.num_guesses}/{self.total_guesses}):-",
+                end="\n\n",
+            )
+            print(f"  {'  '.join(self.guess_history[-1].upper())}")
+            print(
+                f" {' '.join(self.convert_clues_to_emoji(self.clue_bits_history[-1]))}",
+                end="\n\n",
+            )
 
-        if self.is_game_complete():
-            self.print_result()
+            if self.is_game_complete():
+                self.print_result()
