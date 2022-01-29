@@ -11,11 +11,15 @@ from .random_candidate_strategy import RandomCandidateStrategy
 
 
 class DeedyStrategy:
-    def __init__(self, wordle):
-        self.wordle = wordle
-        self.rcs = RandomCandidateStrategy(self.wordle)
+    def __init__(self, game=None):
+        self.game = game
+        self.rcs = RandomCandidateStrategy()
         self.pos_to_dist_map = {}
-        for pos in range(len(self.wordle.word)):
+
+
+    def set_game(self,game):
+        self.game = game
+        for pos in range(len(self.game.word)):
             self.pos_to_dist_map[pos] = {}
 
     def get_score(self, candidate):

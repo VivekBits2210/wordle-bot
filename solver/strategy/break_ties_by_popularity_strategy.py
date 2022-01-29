@@ -4,9 +4,13 @@ from .random_candidate_strategy import RandomCandidateStrategy
 
 
 class BreakTiesByPopularityStrategy:
-    def __init__(self, wordle):
-        self.wordle = wordle
-        self.rcs = RandomCandidateStrategy(self.wordle)
+    def __init__(self, game=None):
+        self.game = game
+        self.rcs = RandomCandidateStrategy()
+
+    def set_game(self,game):
+        self.game = game
+        self.rcs.set_game(game)
 
     def get_score(self, candidate):
         return WordUtil().get_word_frequency(word=candidate)

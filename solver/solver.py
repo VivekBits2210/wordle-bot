@@ -26,26 +26,26 @@ strategy_enum_to_strategy_mapper = {
 
 
 class Solver:
-    def __init__(self, wordle, strategy, *, subdue=False, slow=False):
+    def __init__(self, game, strategy, *, subdue=False, slow=False):
         self.slow = slow
         self.subdue = subdue
-        self.wordle = wordle
+        self.game = game
         self.strategy_enum = StrategyEnum.from_str(strategy)
-        self.strategy = strategy_enum_to_strategy_mapper[self.strategy_enum](
-            self.wordle
-        )
+        self.strategy = strategy_enum_to_strategy_mapper[self.strategy_enum]()
 
     def set_game(self, game):
-        self.wordle = game
+        self.game = game
+        self.strategy.set_game(game)
 
     def solve(self):
+        self.strategy.set_game(self.game)
         if not self.subdue:
             print(f"Strategy: {self.strategy_enum.name}\n")
         while True:
             guess = self.strategy.get_guess()
-            self.wordle.play(guess)
-            self.wordle.pretty_print_game_output()
-            if self.wordle.is_game_complete():
+            self.game.play(guess)
+            self.game.pretty_print_game_output()
+            if self.game.is_game_complete():
                 break
 
             if self.slow:
