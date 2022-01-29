@@ -27,7 +27,7 @@ class WordUtil:
         return self.word
 
     def get_words_of_given_difficulty(
-        self, *, word_subset=WORDS, difficulty=None, force_create=False
+        self, *, difficulty=None, length=None, force_create=False
     ):
         if difficulty is None:
             difficulty = self.difficulty
@@ -39,7 +39,10 @@ class WordUtil:
             )
             if difficulty_to_words_map is not None:
                 words = difficulty_to_words_map[difficulty]
-                return words.intersection(word_subset)
+                if not length:
+                    return words
+                else:
+                    return set(filter(lambda x: len(x) == length, list(words)))
 
         # Create difficulty to words map if not exist (or if force_create)
         difficulty_to_words_map = self.create_word_to_difficulty_map()
@@ -48,7 +51,10 @@ class WordUtil:
         )
 
         words = difficulty_to_words_map[difficulty]
-        return words.intersection(word_subset)
+        if not length:
+            return words
+        else:
+            return set(filter(lambda x: len(x) == length, list(words)))
 
     def get_words_of_given_length(self, length=None, *, words=WORDS):
         if length is None:
@@ -110,7 +116,7 @@ class WordUtil:
         for difficulty in self.difficulty_to_frequency_interval_map:
             if frequency in self.difficulty_to_frequency_interval_map[difficulty]:
                 return difficulty
-        raise Exception(f"Word is too rare.")
+        return 10
 
     def create_word_to_difficulty_map(self, *, words=WORDS):
         difficulty_to_words_map = {}

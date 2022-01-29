@@ -1,3 +1,4 @@
+from ast import Continue
 import time
 import random
 from webbrowser import get
@@ -13,9 +14,9 @@ class Profiler:
     def __init__(
         self,
         strategy,
-        guess_range=range(5, 8),
-        length_range=range(4, 10),
-        difficulty_range=(1, 9),
+        guess_range=range(4, 10),
+        length_range=range(4, 6),
+        difficulty_range=range(1, 9),
     ):
         self.strategy = strategy
         self.solver = Solver(None, self.strategy, subdue=True)
@@ -27,21 +28,21 @@ class Profiler:
         wu = WordUtil()
         profile = {}
         for length in self.length_range:
-            words = wu.get_words_of_given_length(length=length)
             for difficulty in self.difficulty_range:
                 words = wu.get_words_of_given_difficulty(
-                    word_subset=words, difficulty=difficulty
+                    difficulty=difficulty, length =length
                 )
                 for guesses in self.guess_range:
                     game_tuple = (length, difficulty, guesses)
                     profile[game_tuple] = 0.0
                     win_counter = 0
-                    sampled_words = random.sample(list(words), 100)
+                    sampled_words = words
                     print(
-                        "Length: {}, Difficulty: {}, Guesses: {}, Number of Words: {} ".format(
-                            length, difficulty, guesses, len(words)
-                        )
+                        f"Length: {length}, Difficulty: {difficulty}, Guesses: {guesses}, Number of Words: {len(sampled_words)}, ",
+                        end=''
                     )
+                    if len(sampled_words) == 0:
+                        continue
                     for word in sampled_words:
                         game = Wordle(word, guesses, subdue=True)
                         is_win = self.profile_game(game)
@@ -50,7 +51,7 @@ class Profiler:
                         )
 
                     profile[game_tuple] = 100 * (win_counter / len(sampled_words))
-                    print(f"WIN PERCENTAGE: {profile[game_tuple]}")
+                    print(f"Win Percentage: {round(profile[game_tuple],2)} %")
 
         return profile
 

@@ -11,17 +11,30 @@ logger = get_logger(__file__)
 class RandomCandidateStrategy:
     def __init__(self, game=None):
         self.game = game
-        self.candidates = None
         self.length_to_candidates_map = {}
         for length in range(2,MAX_WORD_LENGTH):
             self.length_to_candidates_map[length] = WordUtil().get_words_of_given_length(length)
+
+        self.candidates = None
         self.confirmed_alphabets = set()
         self.confirmed_absent_alphabets = set()
         self.confirmed_alphabet_mapping = {}
         self.alphabet_to_candidate_mapping = {}
+        self.alphabet_and_position_to_candidate_mapping = {}
+
+        for candidate in self.candidates:
+            for position in range(len(candidate)):
+                alphabet = candidate[position]
+                if (alphabet,position) in self.alphabet_and_position_to_candidate_mapping:
+                    self.alphabet_and_position_to_candidate_mapping[(alphabet, position)].add(candidate)
+                else:
+                    self.alphabet_and_position_to_candidate_mapping[(alphabet, position)] = set([candidate])
+
+                if alphabet in self.alphabet_to_candidate_mapping:
+                    self.alphabet_to_candidate_mapping[alphabet].add(candidate)
+                else:
+                    self.alphabet_to_candidate_mapping[alphabet] = set([candidate])
         
-        # for candidate in self.candidates:
-        #     for alphabet in candidate:
 
     def set_game(self, game):
         self.game = game
@@ -49,19 +62,27 @@ class RandomCandidateStrategy:
                 self.confirmed_alphabet_mapping[position] = last_word[position]
 
     def update_candidates(self):
-        new_candidates = deepcopy(self.candidates)
+        new_candidates = set()
+    
+        for position in self.confirmed_alphabet_mapping:
+            alphabet = self.confirmed_alphabet_mapping[position]
+            self.alphabet_to_candidate_mapping
+            
+        for alphabet in self.alphabet_to_candidate_mapping:
+            if alphabet not in self.confirmed_absent_alphabets:
+                new_candidates.add(self.alphabet_to_candidate_mapping[alphabet])
+            
+
+
         for candidate in self.candidates:
             discard = False
             for index in range(len(candidate)):
                 alphabet = candidate[index]
-                if alphabet in self.confirmed_absent_alphabets:
+                
                     discard = True
                     break
 
-                if index in self.confirmed_alphabet_mapping:
-                    if alphabet != self.confirmed_alphabet_mapping[index]:
-                        discard = True
-                        break
+                
 
             if discard:
                 new_candidates.remove(candidate)
