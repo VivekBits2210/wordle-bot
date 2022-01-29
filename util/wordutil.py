@@ -38,7 +38,8 @@ class WordUtil:
                 DIFFICULTY_TO_WORD_MAP_PICKLE_FILE_PATH
             )
             if difficulty_to_words_map is not None:
-                return difficulty_to_words_map[difficulty]
+                words = difficulty_to_words_map[difficulty]
+                return words.intersection(word_subset)
 
         # Create difficulty to words map if not exist (or if force_create)
         difficulty_to_words_map = self.create_word_to_difficulty_map()
@@ -125,6 +126,7 @@ class WordUtil:
                 difficulty_to_words_map[difficulty] = set(word)
             else:
                 difficulty_to_words_map[difficulty].add(word)
+        self.difficulty_to_words_map = difficulty_to_words_map
         return difficulty_to_words_map
 
     def create_difficulty_to_frequency_interval_data(self):

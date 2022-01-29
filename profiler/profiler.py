@@ -18,6 +18,7 @@ class Profiler:
         difficulty_range=(1, 9),
     ):
         self.strategy = strategy
+        self.solver = Solver(None, self.strategy, subdue=True)
         self.guess_range = guess_range
         self.length_range = length_range
         self.difficulty_range = difficulty_range
@@ -43,8 +44,9 @@ class Profiler:
                     )
                     for word in sampled_words:
                         game = Wordle(word, guesses, subdue=True)
+                        is_win = self.profile_game(game)
                         win_counter = (
-                            win_counter + 1 if self.profile_game(game) else win_counter
+                            win_counter + 1 if is_win else win_counter
                         )
 
                     profile[game_tuple] = 100 * (win_counter / len(sampled_words))
@@ -53,6 +55,6 @@ class Profiler:
         return profile
 
     def profile_game(self, game):
-        self.solver = Solver(game, self.strategy, subdue=True)
+        self.solver.set_game(game)
         self.solver.solve()
         return game.has_won()

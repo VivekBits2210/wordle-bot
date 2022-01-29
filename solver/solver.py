@@ -38,7 +38,6 @@ class Solver:
         self.strategy.set_game(game)
 
     def solve(self):
-        self.strategy.set_game(self.game)
         if not self.subdue:
             print(f"Strategy: {self.strategy_enum.name}\n")
         while True:

@@ -11,21 +11,25 @@ logger = get_logger(__file__)
 class RandomCandidateStrategy:
     def __init__(self, game=None):
         self.game = game
+        self.candidates = None
         self.length_to_candidates_map = {}
         for length in range(2,MAX_WORD_LENGTH):
-            self.length_to_candidates_map[length] = WordUtil().get_words_of_given_length(
-                length=length
-            )
+            self.length_to_candidates_map[length] = WordUtil().get_words_of_given_length(length)
         self.confirmed_alphabets = set()
         self.confirmed_absent_alphabets = set()
         self.confirmed_alphabet_mapping = {}
-
         self.alphabet_to_candidate_mapping = {}
+        
         # for candidate in self.candidates:
         #     for alphabet in candidate:
 
-    def set_game(self,game):
+    def set_game(self, game):
         self.game = game
+        self.confirmed_alphabets = set()
+        self.confirmed_absent_alphabets = set()
+        self.confirmed_alphabet_mapping = {}
+        self.alphabet_to_candidate_mapping = {}
+        self.candidates = self.length_to_candidates_map[len(self.game.word)]
 
     def parse_last_guess_and_clue(self):
         try:
@@ -45,7 +49,6 @@ class RandomCandidateStrategy:
                 self.confirmed_alphabet_mapping[position] = last_word[position]
 
     def update_candidates(self):
-        self.candidates = self.length_to_candidates_map[len(self.game.word)]
         new_candidates = deepcopy(self.candidates)
         for candidate in self.candidates:
             discard = False
@@ -66,6 +69,9 @@ class RandomCandidateStrategy:
         self.candidates = new_candidates
 
     def get_guess(self):
+        print(self.game.word)
+        print(self.game.word in self.candidates)
+        print(len(self.candidates))
         self.parse_last_guess_and_clue()
         self.update_candidates()
         choice = random.choice(list(self.candidates))
