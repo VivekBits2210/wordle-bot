@@ -91,7 +91,7 @@ class WordUtil:
 
             return self.get_difficulty_from_frequency_interval_map(frequency)
 
-    def get_word_frequency(self, word=None, *, kind):
+    def get_word_frequency(self, word=None, *, kind="zipf"):
         if word is None:
             word = self.word
 

@@ -4,6 +4,9 @@ from solver.strategy.random_strategy import RandomStrategy
 from solver.strategy.random_candidate_strategy import RandomCandidateStrategy
 from solver.strategy.deedy_strategy import DeedyStrategy
 from solver.strategy.user_strategy import UserStrategy
+from solver.strategy.five_hit_strategy import FiveHitStrategy
+from solver.strategy.five_hit_popular_break_strategy import FiveHitWithPopularWordTieBreakStrategy
+from solver.strategy.break_ties_by_popularity_strategy import BreakTiesByPopularityStrategy
 
 logger = get_logger(__file__)
 strategy_enum_to_strategy_mapper = {
@@ -11,8 +14,10 @@ strategy_enum_to_strategy_mapper = {
     StrategyEnum.RAND_CAND: RandomCandidateStrategy,
     StrategyEnum.DEEDY: DeedyStrategy,
     StrategyEnum.USER: UserStrategy,
+    StrategyEnum.FIVE_HIT: FiveHitStrategy,
+    StrategyEnum.FIVE_HIT_TIES_POP: FiveHitWithPopularWordTieBreakStrategy,
+    StrategyEnum.TIES_POP: BreakTiesByPopularityStrategy,
 }
-
 
 class Solver:
     def __init__(self, slow, strategy, wordle):

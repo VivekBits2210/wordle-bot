@@ -27,7 +27,8 @@ def main():
         solver = Solver(args.slow, args.strategy, wordle)
         solver.solve()
     except Exception as e:
-        logger.error(e)
+        logger.error(f"{repr(e)}")
+        traceback.print_exc()
         if parser.args.debug:
             traceback.print_exc()
 

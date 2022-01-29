@@ -10,17 +10,21 @@ class RandomCandidateStrategy:
             length=len(self.wordle.word)
         )
         self.confirmed_alphabets = set()
+        self.confirmed_absent_alphabets = set()
         self.confirmed_alphabet_mapping = {}
 
     def parse_last_guess_and_clue(self):
         try:
             last_word = self.wordle.guess_history[-1]
             last_clue = self.wordle.clue_bits_history[-1]
-            self.candidates.remove(self.wordle.guess_history[-1])
+            if self.wordle.guess_history[-1] in self.candidates:
+                self.candidates.remove(self.wordle.guess_history[-1])
         except IndexError:  # Game has begun, nothing to parse
             return
 
         for position in last_clue:
+            if last_clue[position] == 0:
+                self.confirmed_absent_alphabets.add(last_word[position])
             if last_clue[position] >= 1:
                 self.confirmed_alphabets.add(last_word[position])
             if last_clue[position] == 2:
@@ -29,20 +33,21 @@ class RandomCandidateStrategy:
     def update_candidates(self):
         new_candidates = deepcopy(self.candidates)
         for candidate in self.candidates:
-            continue_in_outer_loop = False
-            for alphabet in self.confirmed_alphabets:
-                if alphabet not in candidate:
-                    new_candidates.remove(candidate)
-                    continue_in_outer_loop = True
+            discard = False
+            for index in range(len(candidate)):
+                alphabet = candidate[index]
+                if alphabet in self.confirmed_absent_alphabets:
+                    discard = True
                     break
 
-            if continue_in_outer_loop:
-                continue
+                if index in self.confirmed_alphabet_mapping:
+                    if candidate[index] != self.confirmed_alphabet_mapping[index]:
+                        discard = True
+                        break
+        
+            if discard:
+                new_candidates.remove(candidate)
 
-            for position in self.confirmed_alphabet_mapping:
-                if candidate[position] != self.confirmed_alphabet_mapping[position]:
-                    new_candidates.remove(candidate)
-                    break
         self.candidates = new_candidates
 
     def get_guess(self):
