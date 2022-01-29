@@ -22,7 +22,7 @@ class StrategyEnum(Enum):
         if label == "FIVE_HIT":
             return StrategyEnum.FIVE_HIT
         if label == "TIES_POP":
-            return StrategyEnum.TIES_POP    
+            return StrategyEnum.TIES_POP
         if label == "FIVE_HIT_TIES_POP":
             return StrategyEnum.FIVE_HIT_TIES_POP
         raise NotImplementedError

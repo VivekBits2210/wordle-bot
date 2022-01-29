@@ -2,6 +2,7 @@ import random
 from util.wordutil import WordUtil
 from .random_candidate_strategy import RandomCandidateStrategy
 
+
 class BreakTiesByPopularityStrategy:
     def __init__(self, wordle):
         self.wordle = wordle
@@ -19,7 +20,7 @@ class BreakTiesByPopularityStrategy:
                 max_score = current_score
                 max_score_candidate_list.append(candidate)
         return random.choice(max_score_candidate_list)
-    
+
     def get_guess(self):
         self.rcs.parse_last_guess_and_clue()
         self.rcs.update_candidates()

@@ -5,15 +5,15 @@ from util.constants import WORDS
 class UserStrategy:
     def __init__(self, wordle):
         self.wordle = wordle
-        qwertyKeyboard = 'qwertyuiopasdfghjklzxcvbnm'
-        self.unused_letters = (list(qwertyKeyboard))
+        qwertyKeyboard = "qwertyuiopasdfghjklzxcvbnm"
+        self.unused_letters = list(qwertyKeyboard)
 
     def get_guess(self):
         guess = ""
         while True:
-            print(f"Unused Letters: ",end='')
+            print(f"Unused Letters: ", end="")
             for letter in self.unused_letters:
-                print(f"{letter.upper()}", end=' ')
+                print(f"{letter.upper()}", end=" ")
             guess = input("\nEnter guess: ").strip().lower()
             if len(self.wordle.word) != len(guess):
                 print(f"Your guess '{guess}' is not of length {len(self.wordle.word)}!")

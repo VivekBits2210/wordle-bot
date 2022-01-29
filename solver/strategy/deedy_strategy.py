@@ -9,6 +9,7 @@ import random
 from util.wordutil import WordUtil
 from .random_candidate_strategy import RandomCandidateStrategy
 
+
 class DeedyStrategy:
     def __init__(self, wordle):
         self.wordle = wordle
@@ -25,24 +26,23 @@ class DeedyStrategy:
 
     def calculate_frequency_distribution_per_position(self):
         for candidate in self.rcs.candidates:
-            for pos in range(len(candidate)):                
+            for pos in range(len(candidate)):
                 char = candidate[pos]
                 if char not in self.pos_to_dist_map[pos]:
                     self.pos_to_dist_map[pos][char] = 1
                 else:
                     self.pos_to_dist_map[pos][char] += 1
-        
+
         temp_pos_to_dict_map = {}
-        for pos in self.pos_to_dist_map:                
+        for pos in self.pos_to_dist_map:
             distr_map = self.pos_to_dist_map[pos]
-            denom=sum(distr_map.values())
+            denom = sum(distr_map.values())
             temp_distr_map = {}
             for char in distr_map:
-                temp_distr_map[char] = 100 * (float(distr_map[char])/float(denom))
+                temp_distr_map[char] = 100 * (float(distr_map[char]) / float(denom))
             distr_map = temp_distr_map
             temp_pos_to_dict_map[pos] = distr_map
         self.pos_to_dist_map = temp_pos_to_dict_map
-                
 
     def get_max_score_candidate(self):
         self.calculate_frequency_distribution_per_position()
@@ -54,7 +54,7 @@ class DeedyStrategy:
                 max_score = current_score
                 max_score_candidate = candidate
         return max_score_candidate
-    
+
     def get_guess(self):
         self.rcs.parse_last_guess_and_clue()
         self.rcs.update_candidates()

@@ -5,6 +5,8 @@ from util.log_gen import get_logger
 from util.wordutil import WordUtil
 
 logger = get_logger(__file__)
+
+
 class RandomCandidateStrategy:
     def __init__(self, wordle):
         self.wordle = wordle
@@ -14,11 +16,12 @@ class RandomCandidateStrategy:
         self.confirmed_alphabets = set()
         self.confirmed_absent_alphabets = set()
         self.confirmed_alphabet_mapping = {}
-        self.alphabet_to_candidate_mapping = {} #TODO: Find ways to decrease candidate_update_time
+        self.alphabet_to_candidate_mapping = (
+            {}
+        )  # TODO: Find ways to decrease candidate_update_time
 
         # for candidate in self.candidates:
         #     for alphabet in candidate:
-
 
     def parse_last_guess_and_clue(self):
         try:

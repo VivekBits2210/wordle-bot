@@ -19,7 +19,9 @@ class Wordle:
                     f"Started Wordle game for word {self.word} with {self.num_guesses} guesses remaining...\n"
                 )
             else:
-                print(f"Started Wordle game with {self.num_guesses} guesses remaining...\n")
+                print(
+                    f"Started Wordle game with {self.num_guesses} guesses remaining...\n"
+                )
 
     # 0 -> nothing, 1 -> out of place, 2 -> accurate
     def play(self, word_guess):

@@ -26,7 +26,9 @@ class WordUtil:
         self.word = random.choice(list(specific_words))
         return self.word
 
-    def get_words_of_given_difficulty(self,*, word_subset=WORDS, difficulty=None, force_create=False):
+    def get_words_of_given_difficulty(
+        self, *, word_subset=WORDS, difficulty=None, force_create=False
+    ):
         if difficulty is None:
             difficulty = self.difficulty
         difficulty_to_words_map = {}
