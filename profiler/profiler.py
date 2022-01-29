@@ -1,4 +1,5 @@
 from ast import Continue
+from importlib.machinery import WindowsRegistryFinder
 import time
 import random
 from webbrowser import get
@@ -14,8 +15,8 @@ class Profiler:
     def __init__(
         self,
         strategy,
-        guess_range=range(4, 10),
-        length_range=range(4, 6),
+        guess_range=range(4, 8),
+        length_range=range(6,7),
         difficulty_range=range(1, 9),
     ):
         self.strategy = strategy
@@ -32,26 +33,27 @@ class Profiler:
                 words = wu.get_words_of_given_difficulty(
                     difficulty=difficulty, length =length
                 )
+                if len(words) == 0:
+                    continue
                 for guesses in self.guess_range:
                     game_tuple = (length, difficulty, guesses)
                     profile[game_tuple] = 0.0
                     win_counter = 0
-                    sampled_words = words
                     print(
-                        f"Length: {length}, Difficulty: {difficulty}, Guesses: {guesses}, Number of Words: {len(sampled_words)}, ",
+                        f"Length: {length}, Difficulty: {difficulty}, Guesses: {guesses}, Number of Words: {len(words)}, ",
                         end=''
                     )
-                    if len(sampled_words) == 0:
-                        continue
-                    for word in sampled_words:
+                    
+                    for word in words:
                         game = Wordle(word, guesses, subdue=True)
                         is_win = self.profile_game(game)
                         win_counter = (
                             win_counter + 1 if is_win else win_counter
                         )
 
-                    profile[game_tuple] = 100 * (win_counter / len(sampled_words))
-                    print(f"Win Percentage: {round(profile[game_tuple],2)} %")
+                    profile[game_tuple] = 100 * (win_counter / len(words))
+                    profile[game_tuple] = round(profile[game_tuple],2)
+                    print(f"Win Percentage: {profile[game_tuple]} %")
 
         return profile
 

@@ -19,22 +19,25 @@ class RandomCandidateStrategy:
         self.confirmed_alphabets = set()
         self.confirmed_absent_alphabets = set()
         self.confirmed_alphabet_mapping = {}
-        self.alphabet_to_candidate_mapping = {}
-        self.alphabet_and_position_to_candidate_mapping = {}
-
-        for candidate in self.candidates:
-            for position in range(len(candidate)):
-                alphabet = candidate[position]
-                if (alphabet,position) in self.alphabet_and_position_to_candidate_mapping:
-                    self.alphabet_and_position_to_candidate_mapping[(alphabet, position)].add(candidate)
-                else:
-                    self.alphabet_and_position_to_candidate_mapping[(alphabet, position)] = set([candidate])
-
-                if alphabet in self.alphabet_to_candidate_mapping:
-                    self.alphabet_to_candidate_mapping[alphabet].add(candidate)
-                else:
-                    self.alphabet_to_candidate_mapping[alphabet] = set([candidate])
+        self.length_to_alphabet_to_candidate_mapping = {}
+        self.length_to_alphabet_and_position_to_candidate_mapping = {}
         
+        for length in range(2,MAX_WORD_LENGTH):
+            self.length_to_alphabet_to_candidate_mapping[length] = {}
+            self.length_to_alphabet_and_position_to_candidate_mapping[length] = {}
+            for candidate in self.length_to_candidates_map[length]:
+                for position in range(len(candidate)):
+                    alphabet = candidate[position]
+                    if (alphabet,position) in self.length_to_alphabet_and_position_to_candidate_mapping[length]:
+                        self.length_to_alphabet_and_position_to_candidate_mapping[length][(alphabet, position)].add(candidate)
+                    else:
+                        self.length_to_alphabet_and_position_to_candidate_mapping[length][(alphabet, position)] = set([candidate])
+
+                    if alphabet in self.length_to_alphabet_to_candidate_mapping:
+                        self.length_to_alphabet_to_candidate_mapping[length][alphabet].add(candidate)
+                    else:
+                        self.length_to_alphabet_to_candidate_mapping[length][alphabet] = set([candidate])
+            
 
     def set_game(self, game):
         self.game = game
@@ -62,37 +65,19 @@ class RandomCandidateStrategy:
                 self.confirmed_alphabet_mapping[position] = last_word[position]
 
     def update_candidates(self):
-        new_candidates = set()
+        new_candidates = deepcopy(self.candidates)
     
         for position in self.confirmed_alphabet_mapping:
             alphabet = self.confirmed_alphabet_mapping[position]
-            self.alphabet_to_candidate_mapping
+            new_candidates = new_candidates.intersection(self.length_to_alphabet_and_position_to_candidate_mapping[len(self.game.word)][(alphabet,position)])
             
         for alphabet in self.alphabet_to_candidate_mapping:
-            if alphabet not in self.confirmed_absent_alphabets:
-                new_candidates.add(self.alphabet_to_candidate_mapping[alphabet])
-            
-
-
-        for candidate in self.candidates:
-            discard = False
-            for index in range(len(candidate)):
-                alphabet = candidate[index]
-                
-                    discard = True
-                    break
-
-                
-
-            if discard:
-                new_candidates.remove(candidate)
+            if alphabet in self.confirmed_alphabets:
+                new_candidates = new_candidates.intersection(self.length_to_alphabet_to_candidate_mapping[len(self.game.word)][alphabet])
 
         self.candidates = new_candidates
 
-    def get_guess(self):
-        print(self.game.word)
-        print(self.game.word in self.candidates)
-        print(len(self.candidates))
+    def get_guess(self): 
         self.parse_last_guess_and_clue()
         self.update_candidates()
         choice = random.choice(list(self.candidates))

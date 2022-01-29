@@ -7,10 +7,12 @@ from solver.solver import Solver
 
 """
 Work left:
+- Profiling on threads
+- Even faster profiling
+- Add support for multiple words
 - Speed up candidate pruning -> generate regex on the fly?
 - Removing direct access to word by strategy
 - Test suite
-- Word is too rare bug on changing dictionary
 - Other solver strategies
 - Deep learning solver strategy
 """
@@ -39,6 +41,7 @@ def main():
             print(f"Conditions: {vars(args)}")
             game = Wordle(args.word, args.guesses)
             solver = Solver(game, args.strategy, slow=args.slow)
+            solver.set_game(game)
             solver.solve()
     except Exception as e:
         logger.error(f"{repr(e)}")
