@@ -53,3 +53,4 @@ CLUE_BIT_TO_EMOJI_MAP = {
     2: "🟩",
 }
 STRATEGY_CHOICES = [e.name for e in StrategyEnum]
+EXPLORATION_WEIGHT = 0.5
