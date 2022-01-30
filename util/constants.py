@@ -7,8 +7,9 @@ class StrategyEnum(Enum):
     DEEDY = 3
     USER = 4
     FIVE_HIT = 5
-    TIES_POP = 6
-    FIVE_HIT_TIES_POP = 7
+    THREE_HIT = 6
+    TIES_POP = 7
+    FIVE_HIT_TIES_POP = 8
 
     def from_str(label):
         if label == "RAND":
@@ -25,6 +26,8 @@ class StrategyEnum(Enum):
             return StrategyEnum.TIES_POP
         if label == "FIVE_HIT_TIES_POP":
             return StrategyEnum.FIVE_HIT_TIES_POP
+        if label == "THREE_HIT":
+            return StrategyEnum.THREE_HIT
         raise NotImplementedError
 
 

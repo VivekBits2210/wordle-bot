@@ -1,4 +1,5 @@
 import time
+from solver.strategy.three_hit_strategy import ThreeHitStrategy
 from util.log_gen import get_logger
 from util.constants import StrategyEnum
 from solver.strategy.random_strategy import RandomStrategy
@@ -21,6 +22,7 @@ strategy_enum_to_strategy_mapper = {
     StrategyEnum.USER: UserStrategy,
     StrategyEnum.FIVE_HIT: FiveHitStrategy,
     StrategyEnum.FIVE_HIT_TIES_POP: FiveHitWithPopularWordTieBreakStrategy,
+    StrategyEnum.THREE_HIT: ThreeHitStrategy,
     StrategyEnum.TIES_POP: BreakTiesByPopularityStrategy,
 }
 
