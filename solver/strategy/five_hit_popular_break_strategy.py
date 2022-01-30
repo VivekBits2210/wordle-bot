@@ -7,7 +7,7 @@ class FiveHitWithPopularWordTieBreakStrategy:
         self.game = game
         self.fhs = FiveHitStrategy(self.game)
 
-    def set_game(self,game):
+    def set_game(self, game):
         self.game = game
         self.fhs.set_game(self.game)
 

@@ -25,7 +25,6 @@ class RandomCandidateStrategy:
             {}
         )  # TODO: Find ways to decrease candidate_update_time
 
-
     def parse_last_guess_and_clue(self):
         try:
             last_word = self.game.guess_history[-1]

@@ -8,7 +8,7 @@ class BreakTiesByPopularityStrategy:
         self.game = game
         self.rcs = RandomCandidateStrategy()
 
-    def set_game(self,game):
+    def set_game(self, game):
         self.game = game
         self.rcs.set_game(game)
 

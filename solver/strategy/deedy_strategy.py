@@ -19,8 +19,7 @@ class DeedyStrategy:
         self.rcs = RandomCandidateStrategy()
         self.pos_to_dist_map = {}
 
-
-    def set_game(self,game):
+    def set_game(self, game):
         self.game = game
         self.rcs.set_game(self.game)
         self.pos_to_dist_map = {}
@@ -47,7 +46,6 @@ class DeedyStrategy:
             temp_pos_to_dict_map[pos] = distr_map
         self.pos_to_dist_map = temp_pos_to_dict_map
 
-
     def calculate_exploration_benefit_of_alphabets(self):
         self.alphabet_to_exploration_benefit_map = {}
         for candidate in self.rcs.candidates:
@@ -60,9 +58,13 @@ class DeedyStrategy:
 
         MULTIPLIER = 100
         for alphabet in self.alphabet_to_exploration_benefit_map:
-            self.alphabet_to_exploration_benefit_map[alphabet] = (MULTIPLIER*self.alphabet_to_exploration_benefit_map[alphabet])/len(self.rcs.candidates)
-            if self.alphabet_to_exploration_benefit_map[alphabet]>int(MULTIPLIER/2):
-                self.alphabet_to_exploration_benefit_map[alphabet]-= int(MULTIPLIER/2)
+            self.alphabet_to_exploration_benefit_map[alphabet] = (
+                MULTIPLIER * self.alphabet_to_exploration_benefit_map[alphabet]
+            ) / len(self.rcs.candidates)
+            if self.alphabet_to_exploration_benefit_map[alphabet] > int(MULTIPLIER / 2):
+                self.alphabet_to_exploration_benefit_map[alphabet] -= int(
+                    MULTIPLIER / 2
+                )
 
         #     # self.alphabet_to_exploration_benefit_map[alphabet] = 100*(1 - abs(self.alphabet_to_exploration_benefit_map[alphabet] - 0.5))
 
@@ -80,16 +82,18 @@ class DeedyStrategy:
 
     def get_score(self, candidate):
         global EXPLORATION_WEIGHT
-        if self.game.num_guesses/self.game.total_guesses > 0.7:
+        if self.game.num_guesses / self.game.total_guesses > 0.7:
             EXPLORATION_WEIGHT /= 10
         score = 0.0
         alphabets_accounted_for = set()
         for position in range(len(candidate)):
             alphabet = candidate[position]
-            exploitation_score =  self.pos_to_dist_map[position][candidate[position]]
+            exploitation_score = self.pos_to_dist_map[position][candidate[position]]
             if alphabet not in alphabets_accounted_for:
-                exploration_score = self.alphabet_to_exploration_benefit_map[alphabet]  
-                score = score + exploitation_score + exploration_score*EXPLORATION_WEIGHT
+                exploration_score = self.alphabet_to_exploration_benefit_map[alphabet]
+                score = (
+                    score + exploitation_score + exploration_score * EXPLORATION_WEIGHT
+                )
             alphabets_accounted_for.add(alphabet)
             # print(f"SCORES - {exploitation_score} {exploration_score}")
         return score
@@ -98,6 +102,7 @@ class DeedyStrategy:
         self.rcs.parse_last_guess_and_clue()
         self.rcs.update_candidates()
         return self.get_max_score_candidate()
+
 
 # Deedy's code
 
@@ -114,7 +119,7 @@ class DeedyStrategy:
 # 	# 'use_conditional': True,
 # 	# "HARD mode" - every subsequent guess must be in the candidate set
 # 	'non_strict': True,
-# 	# Use positional character distribution instead of global character distribution amongst the 
+# 	# Use positional character distribution instead of global character distribution amongst the
 # 	# remaining word candidates.
 # 	'use_pos': True,
 # 	'max_guesses': str(DEFAULT_MAX_GUESSES)
@@ -151,7 +156,7 @@ class DeedyStrategy:
 #     for ix in range(N):
 #         for c in cands:
 #             new_musts[ix].add(c[ix])
-#     for ix, cond in enumerate(new_musts): 
+#     for ix, cond in enumerate(new_musts):
 #         if len(cond) == 1:
 #             letter = list(cond)[0]
 #             word_right_place[letter].add(ix)
@@ -204,7 +209,7 @@ class DeedyStrategy:
 #     if len(explore_cands) > 0:
 #         # Break ties by boosting words with known letter guesses because
 #         # they can appear in the word again and need to be explicitly checked for
-#         # because simply guessing them in the wrong place will always return 🟨 
+#         # because simply guessing them in the wrong place will always return 🟨
 #         # because it exists in the word twice
 #         def boost_letters_in_right_place(word):
 #             score = 0
@@ -224,6 +229,5 @@ class DeedyStrategy:
 #         print(f'Explore cands ({len(explore_cands)}): {[(c, sortfn(c), boost_letters_in_right_place(c)) for c in explore_cands[:10]]}')
 
 #     chosen_cs = [cand for cand in explore_cands if cand not in prev_guesses]
-#     chosen = chosen_cs[0]	
+#     chosen = chosen_cs[0]
 #     return chosen, cands[:5], len(cands)
-        

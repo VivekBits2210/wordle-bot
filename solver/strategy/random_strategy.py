@@ -7,13 +7,13 @@ class RandomStrategy:
     def __init__(self, game=None):
         self.game = game
         self.length_to_candidates_map = {}
-        for length in range(2,MAX_WORD_LENGTH):
-            self.length_to_candidates_map[length] = WordUtil().get_words_of_given_length(length)
+        for length in range(2, MAX_WORD_LENGTH):
+            self.length_to_candidates_map[
+                length
+            ] = WordUtil().get_words_of_given_length(length)
 
     def set_game(self, game):
         self.game = game
 
     def get_guess(self):
-        return random.choice(
-            list(self.length_to_candidates_map[self.game.word_length])
-        )
+        return random.choice(list(self.length_to_candidates_map[self.game.word_length]))

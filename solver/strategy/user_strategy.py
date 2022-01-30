@@ -8,7 +8,7 @@ class UserStrategy:
         qwertyKeyboard = "qwertyuiopasdfghjklzxcvbnm"
         self.unused_letters = list(qwertyKeyboard)
 
-    def set_game(self,game):
+    def set_game(self, game):
         self.game = game
         self.word_length = self.game.word_length
 
