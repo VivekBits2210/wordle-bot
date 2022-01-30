@@ -26,6 +26,9 @@ class DeedyStrategy:
         for pos in range(self.game.word_length):
             self.pos_to_dist_map[pos] = {}
 
+    def set_rcs(self,rcs):
+        self.rcs = rcs
+
     def calculate_frequency_distribution_per_position(self):
         for candidate in self.rcs.candidates:
             for pos in range(len(candidate)):
@@ -66,7 +69,6 @@ class DeedyStrategy:
                     MULTIPLIER / 2
                 )
 
-        #     # self.alphabet_to_exploration_benefit_map[alphabet] = 100*(1 - abs(self.alphabet_to_exploration_benefit_map[alphabet] - 0.5))
 
     def get_max_score_candidate(self):
         self.calculate_frequency_distribution_per_position()
@@ -82,8 +84,8 @@ class DeedyStrategy:
 
     def get_score(self, candidate):
         global EXPLORATION_WEIGHT
-        if self.game.num_guesses / self.game.total_guesses > 0.7:
-            EXPLORATION_WEIGHT /= 10
+        if self.game.num_guesses / self.game.total_guesses > 0.5:
+            EXPLORATION_WEIGHT /= 2
         score = 0.0
         alphabets_accounted_for = set()
         for position in range(len(candidate)):
@@ -95,7 +97,6 @@ class DeedyStrategy:
                     score + exploitation_score + exploration_score * EXPLORATION_WEIGHT
                 )
             alphabets_accounted_for.add(alphabet)
-            # print(f"SCORES - {exploitation_score} {exploration_score}")
         return score
 
     def get_guess(self):

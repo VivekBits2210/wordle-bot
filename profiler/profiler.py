@@ -15,8 +15,8 @@ class Profiler:
     def __init__(
         self,
         strategy,
-        guess_range=range(5, 8),
-        length_range=range(6, 7)
+        guess_range=range(6, 7),
+        length_range=range(5, 6)
     ):
         self.strategy = strategy
         self.guess_range = guess_range
