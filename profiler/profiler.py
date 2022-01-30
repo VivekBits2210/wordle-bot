@@ -1,3 +1,4 @@
+import time
 import copy
 from concurrent.futures import ThreadPoolExecutor
 from solver.solver import Solver
@@ -13,7 +14,7 @@ class Profiler:
     def __init__(
         self,
         strategy,
-        guess_range=range(4, 8),
+        guess_range=range(5, 8),
         length_range=range(6, 7)
     ):
         self.strategy = strategy
@@ -37,7 +38,30 @@ class Profiler:
                     config_tuple = (guesses, chunk) 
                     self.game_tuple_to_config_tuple_map[game_tuple].append(config_tuple)
 
-    def generate_profile(self):        
+    def generate_profile(self):
+        for game_tuple in self.profile:
+            length = game_tuple[0]
+            guesses = game_tuple[1]
+            print(f"Profiling Length: {length}, Guesses: {guesses}")
+            words = self.length_to_word_map[length]
+            win_counter = 0
+            total_counter = 0
+            total_attempts = 0
+            start = time.process_time()
+            for word in words:
+                game = Wordle(word, guesses, subdue=True)
+                is_win = self.profile_game(game)
+                win_counter = (
+                    win_counter + 1 if is_win else win_counter
+                )
+                total_counter += 1
+                total_attempts += len(game.guess_history)
+                if total_counter%20==0:
+                    print(f'Total={total_counter}:\tFailed: {total_counter - win_counter}\tAccuracy:{(win_counter/total_counter)*100:.02f}%\tAvg Attempts: {total_attempts/total_counter:.02f}\tAvg Time: {(time.process_time() - start)/total_counter:.03f}s')
+            print(f"WIN COUNTER: {win_counter}")
+
+
+    def generate_profile_threaded(self):        
         print(f"{len(self.profile)}")    
         for game_tuple in self.profile:
             print(f"Profiling Length: {game_tuple[0]}, Guesses: {game_tuple[1]}")
