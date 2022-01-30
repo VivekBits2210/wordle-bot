@@ -12,7 +12,6 @@ class RandomStrategy:
 
     def set_game(self, game):
         self.game = game
-        self.set_game(self.game)
 
     def get_guess(self):
         return random.choice(

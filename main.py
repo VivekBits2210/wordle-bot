@@ -7,7 +7,6 @@ from solver.solver import Solver
 
 """
 Work left:
-- Removing direct access to word by strategy
 - Profiling on threads
 - Even faster profiling
 - Speed up candidate pruning -> generate regex on the fly?
