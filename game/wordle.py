@@ -7,7 +7,8 @@ logger = get_logger(__file__)
 
 class Wordle:
     def __init__(self, word, num_guesses, *, show_word=True, subdue=False):
-        self.word = word
+        self._word = word
+        self.word_length = len(self._word)
         self.total_guesses = num_guesses
         self.num_guesses = num_guesses
         self.guess_history = []
@@ -16,7 +17,7 @@ class Wordle:
         if not subdue:
             if show_word:
                 print(
-                    f"Started Wordle game for word {self.word} with {self.num_guesses} guesses remaining...\n"
+                    f"Started Wordle game for word {self._word} with {self.num_guesses} guesses remaining...\n"
                 )
             else:
                 print(
@@ -32,10 +33,10 @@ class Wordle:
         self.guess_history.append(word_guess)
 
         clue_bits = {}
-        for i in range(len(self.word)):
-            if word_guess[i] == self.word[i]:
+        for i in range(self.word_length):
+            if word_guess[i] == self._word[i]:
                 clue_bits[i] = 2
-            elif word_guess[i] in self.word:
+            elif word_guess[i] in self._word:
                 clue_bits[i] = 1
             else:
                 clue_bits[i] = 0
@@ -58,7 +59,7 @@ class Wordle:
         return emoji_string
 
     def has_won(self):
-        return self.word in self.guess_history
+        return self._word in self.guess_history
 
     def has_lost(self):
         return not self.has_won() and self.num_guesses <= 0
@@ -74,7 +75,7 @@ class Wordle:
                     end="\n\n",
                 )
             else:
-                print(f"Player lost, the word is '{self.word}'!", end="\n\n")
+                print(f"Player lost, the word is '{self._word}'!", end="\n\n")
 
     def pretty_print_game_output(self):
         if not self.subdue:

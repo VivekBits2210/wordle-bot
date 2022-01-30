@@ -16,5 +16,5 @@ class RandomStrategy:
 
     def get_guess(self):
         return random.choice(
-            list(self.length_to_candidates_map[len(self.game.word)])
+            list(self.length_to_candidates_map[self.game.word_length])
         )

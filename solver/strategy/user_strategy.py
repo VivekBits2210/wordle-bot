@@ -10,7 +10,7 @@ class UserStrategy:
 
     def set_game(self,game):
         self.game = game
-        self.word_length = len(self.game.word)
+        self.word_length = self.game.word_length
 
     def get_guess(self):
         guess = ""

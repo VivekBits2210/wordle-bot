@@ -7,11 +7,11 @@ from solver.solver import Solver
 
 """
 Work left:
+- Removing direct access to word by strategy
 - Profiling on threads
 - Even faster profiling
-- Add support for multiple words
 - Speed up candidate pruning -> generate regex on the fly?
-- Removing direct access to word by strategy
+- Add support for multiple words
 - Test suite
 - Other solver strategies
 - Deep learning solver strategy
@@ -29,17 +29,19 @@ def main():
 
     try:
         args = parser.parse()
-        if args.strategy == "USER":
-            temp_dict = {key: vars(args)[key] for key in vars(args) if key != "word"}
-            print(f"Conditions: {temp_dict}")
-            game = Wordle(args.word, args.guesses, show_word=False)
 
         if args.profiler:  # Profile
             profiler = Profiler(args.strategy)
             print(profiler.get_profile())
         else:  # Solve
-            print(f"Conditions: {vars(args)}")
-            game = Wordle(args.word, args.guesses)
+            if args.strategy == "USER":
+                temp_dict = {key: vars(args)[key] for key in vars(args) if key != "word"}
+                print(f"Conditions: {temp_dict}")
+                game = Wordle(args.word, args.guesses, show_word=False)
+            else:
+                print(f"Conditions: {vars(args)}")
+                game = Wordle(args.word, args.guesses)
+
             solver = Solver(game, args.strategy, slow=args.slow)
             solver.set_game(game)
             solver.solve()

@@ -16,7 +16,7 @@ class RandomCandidateStrategy:
     def set_game(self, game):
         self.game = game
         self.candidates = WordUtil().get_words_of_given_length(
-            length=len(self.game.word)
+            length=self.game.word_length
         )
         self.confirmed_alphabets = set()
         self.confirmed_absent_alphabets = set()

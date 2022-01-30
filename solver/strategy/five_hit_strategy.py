@@ -25,7 +25,7 @@ class FiveHitStrategy:
         # If we have more than 5 guesses, a 5 letter word and haven't used up all our hit words, we can try a hit word
         if (
             self.game.total_guesses >= 6
-            and len(self.game.word) == 5
+            and self.game.word_length == 5
             and len(self.game.guess_history) in self.five_hit_candidates
         ):
             return self.five_hit_candidates[len(self.game.guess_history)]
