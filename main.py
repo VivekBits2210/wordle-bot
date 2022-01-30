@@ -7,10 +7,8 @@ from solver.solver import Solver
 
 """
 Work left:
-- Profiling on threads
-- Even faster profiling
 - Test suite
-- Speed up candidate pruning -> generate regex on the fly?
+- Deep learning Bot (https://github.com/Morgan-Griffiths/wordle.git)
 - Add support for multiple words
 - Other solver strategies
 - Deep learning solver strategy

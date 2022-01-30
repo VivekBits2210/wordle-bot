@@ -20,7 +20,8 @@ class DeedyStrategy:
     def set_game(self,game):
         self.game = game
         self.rcs.set_game(self.game)
-        for pos in range(len(self.game.word_length)):
+        self.pos_to_dist_map = {}
+        for pos in range(self.game.word_length):
             self.pos_to_dist_map[pos] = {}
 
     def get_score(self, candidate):

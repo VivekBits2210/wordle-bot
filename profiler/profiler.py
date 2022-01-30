@@ -1,4 +1,5 @@
 import time
+import random
 import copy
 from concurrent.futures import ThreadPoolExecutor
 from solver.solver import Solver
@@ -43,7 +44,7 @@ class Profiler:
             length = game_tuple[0]
             guesses = game_tuple[1]
             print(f"Profiling Length: {length}, Guesses: {guesses}")
-            words = self.length_to_word_map[length]
+            words = self.get_scrambled_words(self.length_to_word_map[length])
             win_counter = 0
             total_counter = 0
             total_attempts = 0
@@ -100,3 +101,10 @@ class Profiler:
     def chunks(self, words, n):
         words = list(words)
         return [copy.deepcopy(words[i:i + n]) for i in range(0, len(words), n)]
+
+    def get_scrambled_words(self, words):
+        words = list(words)
+        random.shuffle(words)
+        words = set(words)
+        return words
+
