@@ -9,6 +9,7 @@ class FiveHitWithPopularWordTieBreakStrategy:
 
     def set_game(self,game):
         self.game = game
+        self.fhs.set_game(self.game)
 
     def get_guess(self):
         return self.fhs.get_guess(

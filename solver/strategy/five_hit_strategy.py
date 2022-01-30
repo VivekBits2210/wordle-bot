@@ -16,6 +16,7 @@ class FiveHitStrategy:
 
     def set_game(self,game):
         self.game = game
+        self.rcs.set_game(self.game)
         
     def get_guess(self, *, scoring_function=lambda word: 1):
         self.rcs.parse_last_guess_and_clue()

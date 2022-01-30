@@ -1,7 +1,6 @@
 import time
 from copy import deepcopy
 import random
-from util.constants import MAX_WORD_LENGTH
 from util.log_gen import get_logger
 from util.wordutil import WordUtil
 
@@ -11,41 +10,21 @@ logger = get_logger(__file__)
 class RandomCandidateStrategy:
     def __init__(self, game=None):
         self.game = game
-        self.length_to_candidates_map = {}
-        for length in range(2,MAX_WORD_LENGTH):
-            self.length_to_candidates_map[length] = WordUtil().get_words_of_given_length(length)
-
-        self.candidates = None
-        self.confirmed_alphabets = set()
-        self.confirmed_absent_alphabets = set()
-        self.confirmed_alphabet_mapping = {}
-        self.length_to_alphabet_to_candidate_mapping = {}
-        self.length_to_alphabet_and_position_to_candidate_mapping = {}
-        
-        for length in range(2,MAX_WORD_LENGTH):
-            self.length_to_alphabet_to_candidate_mapping[length] = {}
-            self.length_to_alphabet_and_position_to_candidate_mapping[length] = {}
-            for candidate in self.length_to_candidates_map[length]:
-                for position in range(len(candidate)):
-                    alphabet = candidate[position]
-                    if (alphabet,position) in self.length_to_alphabet_and_position_to_candidate_mapping[length]:
-                        self.length_to_alphabet_and_position_to_candidate_mapping[length][(alphabet, position)].add(candidate)
-                    else:
-                        self.length_to_alphabet_and_position_to_candidate_mapping[length][(alphabet, position)] = set([candidate])
-
-                    if alphabet in self.length_to_alphabet_to_candidate_mapping:
-                        self.length_to_alphabet_to_candidate_mapping[length][alphabet].add(candidate)
-                    else:
-                        self.length_to_alphabet_to_candidate_mapping[length][alphabet] = set([candidate])
-            
+        # for candidate in self.candidates:
+        #     for alphabet in candidate:
 
     def set_game(self, game):
         self.game = game
+        self.candidates = WordUtil().get_words_of_given_length(
+            length=len(self.game.word)
+        )
         self.confirmed_alphabets = set()
         self.confirmed_absent_alphabets = set()
         self.confirmed_alphabet_mapping = {}
-        self.alphabet_to_candidate_mapping = {}
-        self.candidates = self.length_to_candidates_map[len(self.game.word)]
+        self.alphabet_to_candidate_mapping = (
+            {}
+        )  # TODO: Find ways to decrease candidate_update_time
+
 
     def parse_last_guess_and_clue(self):
         try:
@@ -66,18 +45,25 @@ class RandomCandidateStrategy:
 
     def update_candidates(self):
         new_candidates = deepcopy(self.candidates)
-    
-        for position in self.confirmed_alphabet_mapping:
-            alphabet = self.confirmed_alphabet_mapping[position]
-            new_candidates = new_candidates.intersection(self.length_to_alphabet_and_position_to_candidate_mapping[len(self.game.word)][(alphabet,position)])
-            
-        for alphabet in self.alphabet_to_candidate_mapping:
-            if alphabet in self.confirmed_alphabets:
-                new_candidates = new_candidates.intersection(self.length_to_alphabet_to_candidate_mapping[len(self.game.word)][alphabet])
+        for candidate in self.candidates:
+            discard = False
+            for index in range(len(candidate)):
+                alphabet = candidate[index]
+                if alphabet in self.confirmed_absent_alphabets:
+                    discard = True
+                    break
+
+                if index in self.confirmed_alphabet_mapping:
+                    if alphabet != self.confirmed_alphabet_mapping[index]:
+                        discard = True
+                        break
+
+            if discard:
+                new_candidates.remove(candidate)
 
         self.candidates = new_candidates
 
-    def get_guess(self): 
+    def get_guess(self):
         self.parse_last_guess_and_clue()
         self.update_candidates()
         choice = random.choice(list(self.candidates))

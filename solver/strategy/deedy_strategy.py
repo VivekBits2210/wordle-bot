@@ -19,6 +19,7 @@ class DeedyStrategy:
 
     def set_game(self,game):
         self.game = game
+        self.rcs.set_game(self.game)
         for pos in range(len(self.game.word)):
             self.pos_to_dist_map[pos] = {}
 
