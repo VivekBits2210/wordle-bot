@@ -10,8 +10,6 @@ logger = get_logger(__file__)
 class RandomCandidateStrategy:
     def __init__(self, game=None):
         self.game = game
-        # for candidate in self.candidates:
-        #     for alphabet in candidate:
 
     def set_game(self, game):
         self.game = game

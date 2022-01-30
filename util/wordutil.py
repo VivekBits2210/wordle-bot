@@ -13,6 +13,12 @@ class WordUtil:
         self.difficulty = difficulty
         self.word = None
         self.difficulty_to_frequency_interval_map = None
+        self.length_to_words_map = {}
+        for word in WORDS:
+            if len(word) not in self.length_to_words_map:
+                self.length_to_words_map[len(word)] = set([word])
+            else:
+                self.length_to_words_map[len(word)].add(word)
 
     def get_word(self):
         specific_words = self.get_words_of_given_difficulty()
@@ -59,6 +65,9 @@ class WordUtil:
     def get_words_of_given_length(self, length=None, *, words=WORDS):
         if length is None:
             length = self.length
+
+        if len(words) == len(WORDS):
+            return self.length_to_words_map[length]
 
         specific_words = set(filter(lambda x: len(x) == length, words))
         if len(specific_words) == 0:

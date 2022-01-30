@@ -9,9 +9,9 @@ from solver.solver import Solver
 Work left:
 - Profiling on threads
 - Even faster profiling
+- Test suite
 - Speed up candidate pruning -> generate regex on the fly?
 - Add support for multiple words
-- Test suite
 - Other solver strategies
 - Deep learning solver strategy
 """
