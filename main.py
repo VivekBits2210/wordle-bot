@@ -7,11 +7,10 @@ from solver.solver import Solver
 
 """
 Work left:
-- Test suite
-- Deep learning Bot (https://github.com/Morgan-Griffiths/wordle.git)
-- Add support for multiple words
+- Test suite ( https://github.com/dlenski/lexeme )
+- Deep learning Bot (https://github.com/Morgan-Griffiths/wordle.git , https://github.com/piovere/wordlebot , https://github.com/cthoyt/pyrdle )
+- Genuine Deedy
 - Other solver strategies
-- Deep learning solver strategy
 """
 
 
