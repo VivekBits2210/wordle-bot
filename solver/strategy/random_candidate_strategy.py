@@ -1,6 +1,7 @@
 import time
 from copy import deepcopy
 import random
+from util.constants import WORDS
 from util.log_gen import get_logger
 from util.wordutil import WordUtil
 
@@ -10,6 +11,7 @@ logger = get_logger(__file__)
 class RandomCandidateStrategy:
     def __init__(self, game=None):
         self.game = game
+        self.candidates = WORDS
 
     def set_game(self, game):
         self.game = game

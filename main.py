@@ -31,7 +31,7 @@ def main():
 
         if args.profiler:  # Profile
             profiler = Profiler(args.strategy)
-            print(profiler.get_profile())
+            print(profiler.generate_profile())
         else:  # Solve
             if args.strategy == "USER":
                 temp_dict = {key: vars(args)[key] for key in vars(args) if key != "word"}

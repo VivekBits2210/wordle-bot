@@ -1,9 +1,11 @@
-import time
+import copy
+from concurrent.futures import ThreadPoolExecutor
 from solver.solver import Solver
 from util.wordutil import WordUtil
 from game.wordle import Wordle
 from util.log_gen import get_logger
-
+from util.constants import NUM_THREADS
+counter = 0
 logger = get_logger(__file__)
 
 
@@ -15,40 +17,62 @@ class Profiler:
         length_range=range(6, 7)
     ):
         self.strategy = strategy
-        self.solver = Solver(None, self.strategy, subdue=True) #Subdue is set to True to stop the game from printing stuff while profiling
         self.guess_range = guess_range
         self.length_range = length_range
-
-    def get_profile(self):
+        self.length_to_word_map = {}
         wu = WordUtil()
-        profile = {}
         for length in self.length_range:
-            t1 = time.process_time()
-            words = wu.get_words_of_given_length(length =length)
-            if len(words) == 0:
-                continue
+            self.length_to_word_map[length] = wu.get_words_of_given_length(length =length)
+
+        #Construct maps
+        self.profile = {}
+        self.game_tuple_to_config_tuple_map = {}
+        for length in self.length_range:
+            words = self.length_to_word_map[length]
             for guesses in self.guess_range:
                 game_tuple = (length, guesses)
-                profile[game_tuple] = 0.0
-                win_counter = 0
-                print(
-                    f"Length: {length}, Guesses: {guesses}, Number of Words: {len(words)} ")
-                t1 = time.process_time()
-                for word in words:
-                    game = Wordle(word, guesses, subdue=True)
-                    is_win = self.profile_game(game)
-                    win_counter = (
-                        win_counter + 1 if is_win else win_counter
-                    )
-                t2 = time.process_time()
-                print(f"Time to guess the words: {t2-t1}")
-                profile[game_tuple] = 100 * (win_counter / len(words))
-                profile[game_tuple] = round(profile[game_tuple],2)
-                print(f"Win Percentage: {profile[game_tuple]} %")
+                self.profile[game_tuple] = 0.0
+                self.game_tuple_to_config_tuple_map[game_tuple] = []
+                for chunk in self.chunks(words,int(len(words)/NUM_THREADS)):  
+                    config_tuple = (guesses, chunk) 
+                    self.game_tuple_to_config_tuple_map[game_tuple].append(config_tuple)
 
-        return profile
+    def generate_profile(self):        
+        print(f"{len(self.profile)}")    
+        for game_tuple in self.profile:
+            print(f"Profiling Length: {game_tuple[0]}, Guesses: {game_tuple[1]}")
+            config_tuple_list = self.game_tuple_to_config_tuple_map[game_tuple]
+            print(len(config_tuple_list))
+            with ThreadPoolExecutor(max_workers=NUM_THREADS) as executor:
+                results = executor.map(self.profile_word_set,config_tuple_list)
+            num_words = len(self.length_to_word_map[game_tuple[0]])
+            self.profile[game_tuple] = round(100*(sum(list(results))/num_words),2)
+            print(f"Win Percentage: {self.profile[game_tuple]} %")
+
+        return self.profile
+
+    def profile_word_set(self,config_tuple):
+        global counter
+        counter = counter + 1
+        print(f"Entered Profile word set : {counter}")
+        guesses = config_tuple[0]
+        words = config_tuple[1]
+        win_counter = 0
+        for word in words:
+            game = Wordle(word, guesses, subdue=True)
+            is_win = self.profile_game(game)
+            win_counter = (
+                win_counter + 1 if is_win else win_counter
+            )
+        print(f"WIN COUNTER: {win_counter}")
+        return win_counter
 
     def profile_game(self, game):
+        self.solver = Solver(None, self.strategy, subdue=True)
         self.solver.set_game(game)
         self.solver.solve()
         return game.has_won()
+        
+    def chunks(self, words, n):
+        words = list(words)
+        return [copy.deepcopy(words[i:i + n]) for i in range(0, len(words), n)]
